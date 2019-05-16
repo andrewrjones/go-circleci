@@ -20,7 +20,7 @@ const (
 )
 
 var (
-	defaultBaseURL = &url.URL{Host: "circleci.com", Scheme: "https", Path: "/api/v1/"}
+	defaultBaseURL = &url.URL{Host: "circleci.com", Scheme: "https", Path: "/api/v1.1/"}
 	defaultLogger  = log.New(os.Stderr, "", log.LstdFlags)
 )
 
@@ -325,10 +325,10 @@ func (c *Client) GetBuild(account, repo string, buildNum int) (*Build, error) {
 }
 
 // ListBuildArtifacts fetches the build artifacts for the given build
-func (c *Client) ListBuildArtifacts(account, repo string, buildNum int) ([]*Artifact, error) {
+func (c *Client) ListBuildArtifacts(vcsType string, account string, repo string, buildNum int) ([]*Artifact, error) {
 	artifacts := []*Artifact{}
 
-	err := c.request("GET", fmt.Sprintf("project/%s/%s/%d/artifacts", account, repo, buildNum), &artifacts, nil, nil)
+	err := c.request("GET", fmt.Sprintf("project/%s/%s/%s/%d/artifacts", vcsType, account, repo, buildNum), &artifacts, nil, nil)
 	if err != nil {
 		return nil, err
 	}
